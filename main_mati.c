@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "AniquilamientoPositronicoIonizanteGravitatorio.h"
+#include "AlduinPaarthurnaxIrileth.h"
 
 int main(){
     Grafo grafito = ConstruccionDelGrafo();
@@ -12,9 +13,14 @@ int main(){
         return (EXIT_FAILURE);
     }
     
-    printf("El delta de grafo: %u\n", grafito->delta);
+    u32 *bipart = Bipartito(grafito);
 
-    u32 veremos = IndiceONVecino(3,5,grafito);
-    printf("%u", veremos);
+    if (bipart != NULL){
+        printf("El grafo es bipartito\n");
+    }
+    else{
+        printf("El grafo no es bipartito\n");
+    }
+
     return 1;
 }

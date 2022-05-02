@@ -6,7 +6,7 @@
 
 //coloreantes
 
-u32* Bipartito(Grafo  G);
+u32* Bipartito(Grafo G);
 
 u32 Greedy(Grafo G,u32* Orden,u32* Coloreo);
 

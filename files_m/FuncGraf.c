@@ -20,7 +20,7 @@ Grafo ConstruccionDelGrafo(){
     while (input[0] == 'c'){
         // Se piden lineas hasta que no sean mas comentarios(alias "C")
         if(fgets(input, buffsize, stdin) == NULL) {
-            printf("Error de estructura");
+            printf("Error de estructura\n");
             return NULL;
         }
     }
