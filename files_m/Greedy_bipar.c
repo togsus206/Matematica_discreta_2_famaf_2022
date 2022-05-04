@@ -4,6 +4,11 @@
 #define MAX(a,b) (((a)>(b))?(a):(b))
 #define ERROR_BAD (pow(2,32)-1)
 
+/*--------------------------------------------------
+-----------------------------------------------------
+----------FUNCIONES AUXILIARES----------------------
+---------------------------------------------------*/
+
 
 //Funcion auxiliar pseudorandom
 static unsigned int s = 1;
@@ -17,13 +22,30 @@ unsigned int pseudorandom(unsigned int seed) {
   return seed;
 }
 
+//Auxiliar para qsort- Ordena de mayor a menor
+int cmpfunc (const void * a, const void * b) {
+   return (*(int*)b -  *(int*)a );
+}
+
+
+//Auxiliar para qsort- ordena de menor a mayor
+int cmpfunc1 (const void * a, const void * b) {
+   return ( *(int*)a - *(int*)b );
+}
+
+
+/*--------------------------------------------------
+-----------------------------------------------------
+-----------------------------------------------------
+---------------------------------------------------*/
+
 //Funciones de coloreo
 
 u32* Bipartito(Grafo G){
     u32 n_vert = NumeroDeVertices(G);
 
     //Reservamos el espacio para el array
-    u32 *punt_array = calloc(n_vert, sizeof(u32));
+    u32 *punt_array = malloc(sizeof(u32)*n_vert);
 
     // For para resetear los colores de los vertices
     for(u32 i = 0; i < n_vert; i++) {
@@ -74,14 +96,7 @@ u32* Bipartito(Grafo G){
         return punt_array;
     }
     else{
-        /*
-        for(u32 i = 0; i < n_vert-1; i++) {
-            u32 *aux = punt_array[i];
-            punt_array = *punt_array[i+1];
-            free(aux);
-        }
-        */
-
+        free(punt_array);
         return NULL;
     }
 }
@@ -147,14 +162,22 @@ u32 Greedy(Grafo G,u32* Orden,u32* Coloreo){
     }
 }
 
-/*
+
 
 //Ordenamiento a partir de claves
 char OrdenFromKey(u32 n,u32* key,u32* Orden){
-    ;
+
+    //For para rellenar el arreglo
+    for(u32 indice=0;indice<n;indice++){
+        Orden[indice] = key[indice];
+    }
+
+    //Ordenamos de mayor a menor
+    qsort(Orden, n, sizeof(u32), cmpfunc);
+
+    return ('0');
 }
 
-*/
 
 
 //Aleatorizar Keys
@@ -169,16 +192,64 @@ void AleatorizarKeys(u32 n,u32 R,u32* key){
     }  
 }
 
-/*
+
 //permutadores de colores
-
-
 u32* PermutarColores(u32 n,u32* Coloreo,u32 R){
-    ;
+
+    u32 max_color = Coloreo[0];
+
+    for (u32 i=1; i<n; i++){
+        if (Coloreo[i]>max_color){
+            max_color = Coloreo[i];
+        }
+    }
+
+    u32 r = max_color +1;
+
+    //Reservamos el espacio para el array auxiliar
+    u32 *punt_array = malloc(sizeof(u32)*n);
+    if(punt_array == NULL){
+        return NULL;
+    }
+
+    //Llenamos el arreglo auxiliar
+    for (u32 i=0; i<r; i++){
+        punt_array[i] = i;
+    }
+
+    AleatorizarKeys(r,R,punt_array);
+
+
+    u32 *ColoreoNuevo = malloc(sizeof(u32)*n);
+    if(ColoreoNuevo == NULL){
+        return NULL;
+    }
+
+    for (u32 j=0; j<n; j++){
+        ColoreoNuevo[j] = punt_array[Coloreo[j]];
+    }
+    free(punt_array);
+
+    return ColoreoNuevo;
 }
+
 
 u32* RecoloreoCardinalidadDecrecienteBC(u32 n,u32* Coloreo){
-    ;
+
+    //Reservamos el espacio para el array auxiliar
+    u32 *punt_array = malloc(sizeof(u32)*n);
+    if(punt_array == NULL){
+        return NULL;
+    }
+
+    
+    for (u32 i=0; i<n; i++){
+        punt_array[i] = Coloreo[i]; 
+    }
+
+    qsort(punt_array, n, sizeof(u32), cmpfunc);
+
+    return punt_array;
 }
-*/
+
 
