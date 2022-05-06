@@ -57,7 +57,7 @@ u32* Bipartito(Grafo G){
 
     //Funcion de coloreo
     u32 indice = 0;
-    while(indice < n_vert && paint_color != 3){
+    while(indice < n_vert){
         if (punt_array[indice] == 0){
             punt_array[indice] = 1;
             paint_color = 2;
@@ -65,42 +65,30 @@ u32* Bipartito(Grafo G){
         else if(punt_array[indice]==1){
             paint_color = 2;
         }
-        else{ //este vertice tiene el color 2
+        else if (punt_array[indice]==2){
             paint_color = 1;
         }
 
-        for(u32 j=0; j< Grado(indice,G);j++){
+        u32 delta_vert = Grado(indice,G); 
+        for(u32 j=0; j< delta_vert ;j++){
             u32 xVec = IndiceONVecino(j,indice,G);
-
-            if(xVec> n_vert){ //Implica que indice on vecino devolvio error
-                paint_color = 3;
-            }
-
+            
             if (punt_array[xVec]==0){
                 punt_array[xVec] = paint_color;
             }
-            else if (punt_array[xVec] == paint_color){
+            else if (punt_array[xVec] == punt_array[indice]){
                 //si es del mismo color, necesitamos un nuevo color
                 //por lo que no es bipartito
-                paint_color = 3;
-            }
-            else{
-                ; //si es de distinto color, no hago nada
+                printf("indice= %u; xvec = %u, grado:%u, vecino:%u\n", indice,xVec, delta_vert, j);
+                free(punt_array);
+                return NULL;
             }
         }
 
         indice++;
     }
-
-    if(paint_color != 3){
-        return punt_array;
-    }
-    else{
-        free(punt_array);
-        return NULL;
-    }
+    return punt_array;
 }
-
 
 
 
@@ -236,20 +224,65 @@ u32* PermutarColores(u32 n,u32* Coloreo,u32 R){
 
 u32* RecoloreoCardinalidadDecrecienteBC(u32 n,u32* Coloreo){
 
+    u32 max_color = Coloreo[0];
+
+    //buscamos la cant de colores
+    for (u32 i=1; i<n; i++){
+        if (Coloreo[i]>max_color){
+            max_color = Coloreo[i];
+        }
+    }
+
+    u32 r = max_color +1;
+
     //Reservamos el espacio para el array auxiliar
-    u32 *punt_array = malloc(sizeof(u32)*n);
+    u32 *punt_array = malloc(sizeof(u32)*r);
     if(punt_array == NULL){
         return NULL;
     }
 
-    
-    for (u32 i=0; i<n; i++){
-        punt_array[i] = Coloreo[i]; 
+    //reservamos espacio para el nuevo coloreo
+    u32 *ColoreoNuevo = malloc(sizeof(u32)*n);
+    if(ColoreoNuevo == NULL){
+        return NULL;
     }
 
-    qsort(punt_array, n, sizeof(u32), cmpfunc);
+    //Reseteo para contar repeticiones
+    for(u32 i = 0; i < r; i++) {
+        punt_array[i] = 0;
+    }
+    
+    //Rellenamos en cada espacio cuanto ocurre ese numero en el arreglo
+    for (u32 i=0; i<n; i++){
+            punt_array[Coloreo[i]] = punt_array[Coloreo[i]]+1; 
+    }
 
-    return punt_array;
+    //for principal
+    for(u32 i=0; i<r; i++){
+        u32 max_repeat = 0; //aloja la posicion que mas se repite en el ciclo
+        u32 max_number = 0; //auxiliar para saber cual es el que mas se repite
+
+        //busca el numero mas repetido 
+        for(u32 j=0; j<r; j++){
+            if(punt_array[j]>max_number){
+                max_number = punt_array[j];
+                max_repeat = j;
+            }
+        }
+
+        //colorea con el color "i" todas las incidencias en donde aparecia en coloreo
+        for(u32 k=0; k<n; k++){
+            if (Coloreo[k] == max_repeat){
+                ColoreoNuevo[k] = i;
+            }
+        }
+
+        //marcamos el color como que se repite 0 veces
+        punt_array[max_repeat] = 0;
+    }
+    free(punt_array);
+
+    return ColoreoNuevo;
 }
 
 
