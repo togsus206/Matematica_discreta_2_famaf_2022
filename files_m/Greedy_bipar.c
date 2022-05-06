@@ -96,11 +96,18 @@ u32 Greedy(Grafo G,u32* Orden,u32* Coloreo){
     u32 n = NumeroDeVertices(G); //cant de vertices
     u32 color;                   //variables color actual del vecino
     u32 max_color = 0;           // Cant max de colores
-    bool usado[n];              //Array con colores no disponibles
     u32 grado = 0;
+    bool *usado = malloc(sizeof(bool)*n); //Array con colores no disponibles
 
     // Inicializo todos los colores en false(sin usar).
-    memset(usado, false, (n)*sizeof(bool));
+    for(u32 k=0; k<n; k++){
+        usado[k] = false;
+    }
+
+    //marcamos en coloreo a todos los espacion con un color que no puede tener
+    for(u32 i=0; i<n;i++){
+        Coloreo[i] = ERROR_BAD;
+    }
 
     //Coloreamos el primer vertice con 0
     Coloreo[Orden[0]] = 0;
@@ -117,7 +124,7 @@ u32 Greedy(Grafo G,u32* Orden,u32* Coloreo){
             u32 vecinoJ = IndiceONVecino(j,vertActual,G);
             color = Coloreo[vecinoJ];
 
-            if(color){
+            if(color != ERROR_BAD){
                 usado[color] = true;
             }
         }
@@ -136,17 +143,19 @@ u32 Greedy(Grafo G,u32* Orden,u32* Coloreo){
             u32 vecinol = IndiceONVecino(l,vertActual,G);
             color = Coloreo[vecinol];
 
-            if(color){
+            if(color != ERROR_BAD){
                 usado[color] = false;
             }
         }
     }
+    free(usado);
 
     if (max_color>n){
         //Esto no deberia poder pasar salvo algun error
         return ERROR_BAD;
     }else{
-        return max_color;
+        //devolvemos max_color+1 por que tambien usamos el color 0
+        return max_color+1;
     }
 }
 
