@@ -13,7 +13,7 @@ int main(){
         return (EXIT_FAILURE);
     }
     
-    /*
+    
     u32 *bipart = Bipartito(grafito);
 
     if (bipart == NULL){
@@ -22,19 +22,22 @@ int main(){
     else{
         printf("El grafo es bipartito\n");
     }
-    */
+    
+
+    /*
     u32 cant_v = NumeroDeVertices(grafito);
 
     u32 *elcoloreo = malloc(sizeof(u32)*cant_v);
     u32 *elorden = malloc(sizeof(u32)*cant_v);
 
     for (u32 i=0; i <cant_v; i++){
-        elorden[i] = i;
-        //elorden[i] = cant_v-i;
+        //elorden[i] = i;
+        elorden[i] = cant_v-i;
     }
 
     u32 elcolor = Greedy(grafito, elorden,elcoloreo);
 
     printf("El coloreo es de %u colores\n", elcolor);
-
+    */
+    
 }

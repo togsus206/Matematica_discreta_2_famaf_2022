@@ -1,5 +1,6 @@
 #include "AlduinPaarthurnaxIrileth.h"
 #include "math.h"
+#include "queue.h"
 
 #define MAX(a,b) (((a)>(b))?(a):(b))
 #define ERROR_BAD (pow(2,32)-1)
@@ -41,6 +42,7 @@ int cmpfunc1 (const void * a, const void * b) {
 
 //Funciones de coloreo
 
+/*
 u32* Bipartito(Grafo G){
     u32 n_vert = NumeroDeVertices(G);
 
@@ -53,43 +55,120 @@ u32* Bipartito(Grafo G){
     }
 
     //Variable auxiliar que tiene el color que necesitamos
-    u32 paint_color = 0;
+    u32 paint_color = 2;
 
     //Funcion de coloreo
     u32 indice = 0;
-    while(indice < n_vert){
+    u32 vertices_coloreados = 0;
+    while(vertices_coloreados<n_vert){
         if (punt_array[indice] == 0){
             punt_array[indice] = 1;
-            paint_color = 2;
-        }
-        else if(punt_array[indice]==1){
-            paint_color = 2;
-        }
-        else if (punt_array[indice]==2){
-            paint_color = 1;
-        }
+            vertices_coloreados++;
 
-        u32 delta_vert = Grado(indice,G); 
-        for(u32 j=0; j< delta_vert ;j++){
-            u32 xVec = IndiceONVecino(j,indice,G);
+            u32 grado_vert = Grado(indice,G);
+            //for que recorre los vecinos
+            for(u32 j=0; j< grado_vert ;j++){
+                u32 xVec = IndiceONVecino(j,indice,G);
             
-            if (punt_array[xVec]==0){
-                punt_array[xVec] = paint_color;
+                if (punt_array[xVec]==0){
+                    punt_array[xVec] = paint_color;
+                    vertices_coloreados++;
+                }
+                else if (punt_array[xVec] == punt_array[indice]){
+                    //si es del mismo color, necesitamos un nuevo color
+                    //por lo que no es bipartito
+                    free(punt_array);
+                    return NULL;
+                }
             }
-            else if (punt_array[xVec] == punt_array[indice]){
-                //si es del mismo color, necesitamos un nuevo color
-                //por lo que no es bipartito
-                printf("indice= %u; xvec = %u, grado:%u, vecino:%u\n", indice,xVec, delta_vert, j);
+        }
+        indice++;
+    }
+
+    //For que revisa que el coloreo sea propio
+    for(u32 i=0; i< n_vert;i++){
+        u32 grado_vert = Grado(i,G);
+        u32 color_vert_actual = punt_array[i];
+
+        for(u32 j=0; j<grado_vert;j++){
+            u32 xVec = IndiceONVecino(j,i,G);
+            if(color_vert_actual == punt_array[xVec]){
+                printf("color xvec=%u, Color indice:%u, y estoy en el vertice: %i\n",punt_array[xVec], punt_array[i], i);
                 free(punt_array);
                 return NULL;
             }
         }
-
-        indice++;
     }
     return punt_array;
 }
 
+*/
+
+u32* Bipartito(Grafo G){
+    struct QueueSt q;
+    u32 indice = 0;
+    u32 n = NumeroDeVertices(G);
+    u32 auxiliar;
+
+    //Reservamos el espacio para el array
+    u32 *punt_array = malloc(sizeof(u32)*n);
+
+    // For para resetear los colores de los vertices
+    for(u32 i = 0; i < n; i++) {
+        punt_array[i] = 0;
+    }
+
+    u32 vertices_coloreados = 0;
+
+    while(vertices_coloreados<n){
+        if (punt_array[indice] == 0){
+            punt_array[indice] = 1;
+            vertices_coloreados++;
+            q = CrearQueue(n);
+            Enqueue(&q,indice);
+
+            //while para desencolor q
+            while(!isEmpty(&q)){
+                auxiliar = Dequeue(&q);
+                //For para recorrer los vecinos
+                u32 gradoV = Grado(auxiliar, G);
+                for(u32 i=0; i<gradoV; i++){
+                    u32 posVecino = IndiceONVecino(i,auxiliar,G);
+                    if(punt_array[posVecino] == 0){
+                        Enqueue(&q,posVecino);
+                        punt_array[posVecino] = (3 - punt_array[auxiliar]);
+                        //aumento los vertices coloreados
+                        vertices_coloreados++;
+                    }
+                    //si un vecino ya tiene el mismo color
+                    //entonces no es bipartito
+                    else if (punt_array[auxiliar]==punt_array[posVecino]){
+                        DestruirQueue(&q);
+                        free(punt_array);
+                        return NULL;
+                    }
+                }
+            }
+            DestruirQueue(&q);
+        }
+        indice++;
+    }
+
+    //For que revisa que el coloreo sea propio
+    for(u32 i=0; i<n; i++){
+        u32 grado_vert = Grado(i,G);
+        u32 color_vert_actual = punt_array[i];
+
+        for(u32 j=0; j<grado_vert; j++){
+            u32 xVec = IndiceONVecino(j,i,G);
+            if(color_vert_actual == punt_array[xVec]){
+                free(punt_array);
+                return NULL;
+            }
+        } 
+    }
+    return punt_array;
+}
 
 
 u32 Greedy(Grafo G,u32* Orden,u32* Coloreo){
