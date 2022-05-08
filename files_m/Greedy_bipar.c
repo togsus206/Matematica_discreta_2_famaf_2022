@@ -14,11 +14,11 @@
 //Funcion auxiliar pseudorandom
 static unsigned int s = 1;
 
-unsigned int pseudorandom(unsigned int seed) {
+u32 pseudorandom(u32 seed) {
   seed += s << 4;
   seed *= 1103515245;
   seed += 12345;
-  seed = (unsigned int) (seed / 65536) % 2048;
+  seed = (u32) (seed / 65536) % 2048;
 
   return seed;
 }
@@ -41,68 +41,6 @@ int cmpfunc1 (const void * a, const void * b) {
 ---------------------------------------------------*/
 
 //Funciones de coloreo
-
-/*
-u32* Bipartito(Grafo G){
-    u32 n_vert = NumeroDeVertices(G);
-
-    //Reservamos el espacio para el array
-    u32 *punt_array = malloc(sizeof(u32)*n_vert);
-
-    // For para resetear los colores de los vertices
-    for(u32 i = 0; i < n_vert; i++) {
-        punt_array[i] = 0;
-    }
-
-    //Variable auxiliar que tiene el color que necesitamos
-    u32 paint_color = 2;
-
-    //Funcion de coloreo
-    u32 indice = 0;
-    u32 vertices_coloreados = 0;
-    while(vertices_coloreados<n_vert){
-        if (punt_array[indice] == 0){
-            punt_array[indice] = 1;
-            vertices_coloreados++;
-
-            u32 grado_vert = Grado(indice,G);
-            //for que recorre los vecinos
-            for(u32 j=0; j< grado_vert ;j++){
-                u32 xVec = IndiceONVecino(j,indice,G);
-            
-                if (punt_array[xVec]==0){
-                    punt_array[xVec] = paint_color;
-                    vertices_coloreados++;
-                }
-                else if (punt_array[xVec] == punt_array[indice]){
-                    //si es del mismo color, necesitamos un nuevo color
-                    //por lo que no es bipartito
-                    free(punt_array);
-                    return NULL;
-                }
-            }
-        }
-        indice++;
-    }
-
-    //For que revisa que el coloreo sea propio
-    for(u32 i=0; i< n_vert;i++){
-        u32 grado_vert = Grado(i,G);
-        u32 color_vert_actual = punt_array[i];
-
-        for(u32 j=0; j<grado_vert;j++){
-            u32 xVec = IndiceONVecino(j,i,G);
-            if(color_vert_actual == punt_array[xVec]){
-                printf("color xvec=%u, Color indice:%u, y estoy en el vertice: %i\n",punt_array[xVec], punt_array[i], i);
-                free(punt_array);
-                return NULL;
-            }
-        }
-    }
-    return punt_array;
-}
-
-*/
 
 u32* Bipartito(Grafo G){
     struct QueueSt q;
