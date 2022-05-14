@@ -7,7 +7,7 @@
 int main(){
     Grafo grafito = ConstruccionDelGrafo();
 
-    /*
+
     if (grafito == NULL) {
         printf("Error en formato de entrada\n");
         return (EXIT_FAILURE);
@@ -22,7 +22,7 @@ int main(){
     else{
         printf("El grafo es bipartito\n");
     }
-    */
+    
     
 
     
@@ -49,6 +49,11 @@ int main(){
     if (c == '0'){
         printf("El coloreo es de %u colores\n", elcolor2);
     }
+
+    u32 *nuevocolor = PermutarColores(cant_v,elcoloreo,35);
+
+    printf("tenemos el coloreo[0]= %u\n", elcoloreo[0]);
+    printf("tenemos el nuevocolor[0]= %u\n", nuevocolor[0]);
     
     
 }

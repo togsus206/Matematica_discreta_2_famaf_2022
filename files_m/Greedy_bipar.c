@@ -34,6 +34,19 @@ int cmpfunc1 (const void * a, const void * b) {
    return ( *(int*)a - *(int*)b );
 }
 
+//Funcion que busca el numero maximo en un arreglo
+u32 cant_color_in_array(u32 n, u32 *Coloreo){
+    u32 max_color = Coloreo[0];
+
+        for (u32 i=1; i<n; i++){
+            if (Coloreo[i]>max_color){
+                max_color = Coloreo[i];
+            }
+        }
+
+        u32 r = max_color +1;
+        return r;
+}
 
 /*--------------------------------------------------
 -----------------------------------------------------
@@ -210,15 +223,9 @@ void AleatorizarKeys(u32 n,u32 R,u32* key){
 //permutadores de colores
 u32* PermutarColores(u32 n,u32* Coloreo,u32 R){
 
-    u32 max_color = Coloreo[0];
-
-    for (u32 i=1; i<n; i++){
-        if (Coloreo[i]>max_color){
-            max_color = Coloreo[i];
-        }
-    }
-
-    u32 r = max_color +1;
+    //Buscamos la cantidad de colores disponibles
+    u32 r = cant_color_in_array(n,Coloreo);
+    
 
     //Reservamos el espacio para el array auxiliar
     u32 *punt_array = malloc(sizeof(u32)*n);
@@ -250,16 +257,8 @@ u32* PermutarColores(u32 n,u32* Coloreo,u32 R){
 
 u32* RecoloreoCardinalidadDecrecienteBC(u32 n,u32* Coloreo){
 
-    u32 max_color = Coloreo[0];
-
-    //buscamos la cant de colores
-    for (u32 i=1; i<n; i++){
-        if (Coloreo[i]>max_color){
-            max_color = Coloreo[i];
-        }
-    }
-
-    u32 r = max_color +1;
+    //Buscamos la cantidad de colores disponibles
+    u32 r = cant_color_in_array(n,Coloreo);
 
     //Reservamos el espacio para el array auxiliar
     u32 *punt_array = malloc(sizeof(u32)*r);
