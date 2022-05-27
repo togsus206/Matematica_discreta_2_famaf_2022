@@ -5,35 +5,6 @@
 #include "AniquilamientoPositronicoIonizanteGravitatorio.h"
 #include "AlduinPaarthurnaxIrileth.h"
 
-//Estructura para guardar ordenes y sus resultador
-// struct LosOrdenesSt{
-//     u32 *orden;
-//     u32 *coloreo;
-//     u32 cant_color_g;
-//     LosOrdenesSt *next;
-// };
-
-// typedef struct LosOrdenesSt *LosOrdenes;
-
-//Fin estructura
-
-// void copiarColoreo(u32 n, u32 *nuevo, u32 *viejo){
-    
-//     for(u32 i=0; i<n; i++){
-//         nuevo[i] = viejo[i];
-//     }
-// }
-
-
-
-//Fucion que hace el punto (6)
-/////////////////////////////////////////////////////////////////
-
-
-
-
-/////////////////////////////////////////////////////////////////
-
 
 int main(int argc, char *argv[]){
 
@@ -67,11 +38,25 @@ int main(int argc, char *argv[]){
         printf("El grafo no es bipartito\n\n");
     }
     else{
-        printf("El grafo es bipartito\n");
+        printf("El grafo es bipartito\n\n");
 
-        //if (num_vertices < 101){
-            //funcion para imprimir partes imprimir partes
-        //}
+        if (num_vertices < 101){
+            printf("Vertices con el color 1: \n");
+            for(u32 i=0; i<num_vertices; i++){
+                if(bipart[i] == 1){
+                    printf("%u--", Nombre(i,grafito));
+                }
+            }
+            printf("\n\n");
+
+            printf("Vertices pintados con el color 2: \n");
+            for(u32 j=0; j<num_vertices; j++){
+                if(bipart[j] == 2){
+                    printf("%u--", Nombre(j,grafito));
+                }
+            }
+            printf("\n\n");
+        }
 
         return EXIT_SUCCESS;
     }
@@ -449,7 +434,7 @@ int main(int argc, char *argv[]){
 
     //Imprimo la cantidad de Greedy's hechos durante el programa
     printf("La cantidad de algoritmos Greedy hechos a traves de todo el trabajo fue de %u\n\n",cant_Greddy);
-    printf("El menor numero con el que se ha logrado pintar el grafo es: %u\n", menor_coloreo);
+    printf("El menor numero con el que se ha logrado colorear el grafo es: %u\n", menor_coloreo);
 
     // printf("%u\n",Best_colors_for_each_alfa[0]);
     // printf("%u\n",Best_colors_for_each_alfa[1]);
