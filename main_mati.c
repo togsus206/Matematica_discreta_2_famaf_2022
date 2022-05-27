@@ -52,8 +52,8 @@ int main(){
 
     u32 *nuevocolor = PermutarColores(cant_v,elcoloreo,35);
 
-    printf("tenemos el coloreo[0]= %u\n", elcoloreo[0]);
-    printf("tenemos el nuevocolor[0]= %u\n", nuevocolor[0]);
+    printf("tenemos el coloreo[0]= %u\n", elcoloreo[cant_v-1]);
+    printf("tenemos el nuevocolor[0]= %u\n", nuevocolor[cant_v-1]);
     
     
 }

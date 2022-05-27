@@ -23,6 +23,16 @@ u32 pseudorandom(u32 seed) {
   return seed;
 }
 
+//Variable Global necesaria
+u32 *El_orden;
+
+//Auxiliar para qsort- Ordena respecto al indice de mayor valor
+int cmpN(const void *p1, const void *p2)
+{
+    const int *a = p1, *b = p2;
+    return El_orden[*b] - El_orden[*a];
+}
+
 //Auxiliar para qsort- Ordena de mayor a menor
 int cmpfunc (const void * a, const void * b) {
    return (*(int*)b -  *(int*)a );
@@ -134,7 +144,7 @@ u32 Greedy(Grafo G,u32* Orden,u32* Coloreo){
         usado[k] = false;
     }
 
-    //marcamos en coloreo a todos los espacion con un color que no puede tener
+    //marcamos en coloreo a todos los espacios con un color que no puede tener
     for(u32 i=0; i<n;i++){
         Coloreo[i] = ERROR_BAD;
     }
@@ -160,7 +170,7 @@ u32 Greedy(Grafo G,u32* Orden,u32* Coloreo){
         }
 
         //Buscamos el primer color disponible
-        for(u32 k = 1; k<n;k++){
+        for(u32 k = 0; k<n;k++){
             if(!usado[k]){
                 Coloreo[vertActual] = k;
                 max_color = MAX(max_color,k);
@@ -168,14 +178,9 @@ u32 Greedy(Grafo G,u32* Orden,u32* Coloreo){
             }
         }
 
-        // Reseteamos el array de colores disponibles a falso
-        for(u32 l=0; l<grado; l++){
-            u32 vecinol = IndiceONVecino(l,vertActual,G);
-            color = Coloreo[vecinol];
 
-            if(color != ERROR_BAD){
-                usado[color] = false;
-            }
+        for(u32 l=0; l<n; l++){
+            usado[l] = false;
         }
     }
     free(usado);
@@ -190,21 +195,21 @@ u32 Greedy(Grafo G,u32* Orden,u32* Coloreo){
 }
 
 
-
 //Ordenamiento a partir de claves
 char OrdenFromKey(u32 n,u32* key,u32* Orden){
 
     //For para rellenar el arreglo
     for(u32 indice=0;indice<n;indice++){
-        Orden[indice] = key[indice];
+        Orden[indice] = indice;
     }
 
+    El_orden = key;
+
     //Ordenamos de mayor a menor
-    qsort(Orden, n, sizeof(u32), cmpfunc);
+    qsort(Orden, n, sizeof(u32), cmpN);
 
     return ('0');
 }
-
 
 
 //Aleatorizar Keys
@@ -226,9 +231,8 @@ u32* PermutarColores(u32 n,u32* Coloreo,u32 R){
     //Buscamos la cantidad de colores disponibles
     u32 r = cant_color_in_array(n,Coloreo);
     
-
     //Reservamos el espacio para el array auxiliar
-    u32 *punt_array = malloc(sizeof(u32)*n);
+    u32 *punt_array = malloc(sizeof(u32)*r);
     if(punt_array == NULL){
         return NULL;
     }
@@ -239,7 +243,6 @@ u32* PermutarColores(u32 n,u32* Coloreo,u32 R){
     }
 
     AleatorizarKeys(r,R,punt_array);
-
 
     u32 *ColoreoNuevo = malloc(sizeof(u32)*n);
     if(ColoreoNuevo == NULL){
